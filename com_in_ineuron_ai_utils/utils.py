@@ -3,7 +3,7 @@ import base64
 
 def decodeImage(imgstring, fileName):
     imgdata = base64.b64decode(imgstring)
-    with open('uploads/'+fileName, 'wb') as f:
+    with open('uploads\inputImage.jpg', 'wb') as f:
         f.write(imgdata)
         f.close()
 

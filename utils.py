@@ -1,11 +1,16 @@
-# Function to visualize bounding boxes in the image
+import matplotlib.pyplot as plt
+from matplotlib import patches
+from torchvision import transforms as torchtrans
+from PIL import Image
+import torch, torchvision
+#  Function to visualize bounding boxes in the image
 
 def plot_img_bbox(img, target):
     # plot the image and bboxes
     # Bounding boxes are defined as follows: x-min y-min width height
     fig, a = plt.subplots(1,1)
     fig.set_size_inches(5,5)
-    a.imshow(img)
+    # a.imshow(img)
     for box in (target['boxes']):
         x, y, width, height  = box[0], box[1], box[2]-box[0], box[3]-box[1]
         rect = patches.Rectangle((x, y),
@@ -16,11 +21,11 @@ def plot_img_bbox(img, target):
 
         # Draw the bounding box on top of the image
         a.add_patch(rect)
-    plt.show()
+    plt.savefig("output.jpg")
     
 # plotting the image with bboxes. Feel free to change the index
-img, target = dataset[2]
-plot_img_bbox(img, target)
+# img, target = dataset[2]
+# plot_img_bbox(img, target)
 
 
 # the function takes the original prediction and the iou threshold.
