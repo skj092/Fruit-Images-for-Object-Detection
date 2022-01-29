@@ -35,6 +35,9 @@ class CardsDetector:
 
         listOfOutput = []
         score = torch.nn.Softmax(prediction['scores'])
+        valDict = {}
+        valDict["confidence"] = str(score)
+        listOfOutput.append(valDict)
         # for (name, score, i) in zip(class_final_names, top_scores, range(min(max_boxes_to_draw, new_boxes.shape[0]))):
         #     valDict = {}
         #     valDict["className"] = name
@@ -47,6 +50,6 @@ class CardsDetector:
         #         valDict["xMax"] = str(val[3])
                     # listOfOutput.append(valDict)
         # plot_img_bbox(torch_to_pil(img), nms_prediction)
-        # opencodedbase64 = encodeImageIntoBase64("output.jpg")
-        # listOfOutput.append({"image": opencodedbase64.decode('utf-8')})
+        opencodedbase64 = encodeImageIntoBase64("uploads\inputImage.jpg")
+        listOfOutput.append({"image": opencodedbase64.decode('utf-8')})
         return listOfOutput

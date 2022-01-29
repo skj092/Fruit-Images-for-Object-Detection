@@ -67,12 +67,17 @@ def home():
 
 
 @app.route("/predict", methods=['POST'])
-@cross_origin()
 def predictRoute():
     image = request.json['image']
     decodeImage(image, clApp.filename)
     result = clApp.objectDetection.getPrediction()
     return jsonify(result)
+
+# @app.after_request
+# def add_headers(response):
+#     response.headers.add('Access-Control-Allow-Origin', '*')
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#     return response
 
 
 #port = int(os.getenv("PORT"))
