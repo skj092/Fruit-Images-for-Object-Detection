@@ -9,7 +9,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from torchvision import transforms as torchtrans
-from utils import apply_nms
+from utils import apply_nms, plot_img_bbox, torch_to_pil
 import torch
 
 
@@ -27,6 +27,9 @@ class CardsDetector:
         prediction = self.MODEL_NAME([img])[0]
         nms_prediction = apply_nms(prediction, iou_thresh=0.01)
         print(prediction)
+        print('saving image')
+        # plot_img_bbox(torch_to_pil(img), nms_prediction)
+        print('saving image complete')
 
 
 
