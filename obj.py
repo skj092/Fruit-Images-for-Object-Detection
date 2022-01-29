@@ -11,6 +11,7 @@ from matplotlib import patches
 from torchvision import transforms as torchtrans
 from utils import apply_nms, plot_img_bbox, torch_to_pil
 import torch
+import cv2
 
 
 class CardsDetector:
@@ -20,36 +21,33 @@ class CardsDetector:
         print(self.IMAGE_NAME)
 
     def getPrediction(self):
-        img = Image.open(self.IMAGE_NAME)
-        img = img.resize((480, 480)).convert('RGB')
+        image = cv2.imread(self.IMAGE_NAME)
+        image = cv2.resize(image, (480, 480))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         tfms = torchtrans.ToTensor()
-        img = tfms(img)
+        img = tfms(image)
         prediction = self.MODEL_NAME([img])[0]
         nms_prediction = apply_nms(prediction, iou_thresh=0.01)
-        print(prediction)
+        print(nms_prediction)
         print('saving image')
         # plot_img_bbox(torch_to_pil(img), nms_prediction)
-        print('saving image complete')
-
-
+        
 
         listOfOutput = []
         score = torch.nn.Softmax(prediction['scores'])
         valDict = {}
         valDict["confidence"] = str(score)
         listOfOutput.append(valDict)
-        # for (name, score, i) in zip(class_final_names, top_scores, range(min(max_boxes_to_draw, new_boxes.shape[0]))):
-        #     valDict = {}
-        #     valDict["className"] = name
-        #     valDict["confidence"] = str(score)
-        #     if new_scores is None or new_scores[i] > min_score_thresh:
-        #         val = list(new_boxes[i])
-        #         valDict["yMin"] = str(val[0])
-        #         valDict["xMin"] = str(val[1])
-        #         valDict["yMax"] = str(val[2])
-        #         valDict["xMax"] = str(val[3])
-                    # listOfOutput.append(valDict)
-        # plot_img_bbox(torch_to_pil(img), nms_prediction)
-        opencodedbase64 = encodeImageIntoBase64("uploads\inputImage.jpg")
+        # drawing box on image
+
+        for box in nms_prediction['boxes']:
+            box = box.detach().numpy()
+            x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
+            img = cv2.rectangle(image, (x1, y1), (x2, y2), (225,0,0), 3)
+        image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        cv2.imwrite('output.jpg', image)
+        print('saving image complete')
+
+        opencodedbase64 = encodeImageIntoBase64("output.jpg")
         listOfOutput.append({"image": opencodedbase64.decode('utf-8')})
         return listOfOutput
