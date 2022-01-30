@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from gevent.pywsgi import WSGIServer
 from torchvision import transforms as torchtrans
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-class_names = ['apple', 'banana', 'orange']
+class_names = ['_','apple', 'banana', 'orange']
 from flask_cors import CORS, cross_origin
 from obj import CardsDetector
 

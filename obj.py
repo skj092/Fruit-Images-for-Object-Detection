@@ -21,6 +21,7 @@ class CardsDetector:
         print(self.IMAGE_NAME)
 
     def getPrediction(self):
+        classes = ['_','apple', 'banana', 'orange']
         image = cv2.imread(self.IMAGE_NAME)
         image = cv2.resize(image, (480, 480))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -38,13 +39,15 @@ class CardsDetector:
         valDict = {}
         valDict["confidence"] = str(score)
         listOfOutput.append(valDict)
-        # drawing box on image
 
-        for box in nms_prediction['boxes']:
-            box = box.detach().numpy()
+        bboxes = nms_prediction['boxes'].detach().numpy()
+        labels = nms_prediction['labels'].detach().numpy()
+        # drawing box on image
+        for box, label in zip(bboxes, labels):
             x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
-            img = cv2.rectangle(image, (x1, y1), (x2, y2), (225,0,0), 3)
-        image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            image = cv2.rectangle(image, (x1, y1), (x2, y2), (225,0,0), 3)
+            image = cv2.putText(image,classes[label], (x1, y1), cv2.FONT_HERSHEY_SIMPLEX,1, (255,225,0), 2)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         cv2.imwrite('output.jpg', image)
         print('saving image complete')
 

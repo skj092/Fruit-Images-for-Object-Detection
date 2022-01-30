@@ -132,3 +132,5 @@ dmypy.json
 # input data and models
 model.h5
 model
+
+uploads/*.jpg
